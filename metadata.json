@@ -1,0 +1,7 @@
+{
+  "name": "Jennskin Naturals",
+  "description": "A modern, premium-minimal skincare brand website specializing in gentle, natural-based Indonesian skincare and body care.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
