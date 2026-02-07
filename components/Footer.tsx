@@ -54,7 +54,7 @@ const Footer: React.FC<Props> = ({ storeLinks, brandTagline, bpomNumber }) => {
           <p className="opacity-50">&copy; 2024 Jennskin Naturals. All Rights Reserved.</p>
           <div className="flex space-x-8">
             <span className="text-brand-yellow">{bpomNumber || 'NA182XXXXXXX'}</span>
-            <a href="#" className="hover:text-brand-yellow">Privacy</a>
+            <Link to="/admin" className="hover:text-brand-yellow">Privacy</Link>
           </div>
         </div>
       </div>
