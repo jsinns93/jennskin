@@ -9,6 +9,10 @@ export default defineConfig(({ mode }) => {
         port: 5000,
         host: '0.0.0.0',
         allowedHosts: true,
+        proxy: {
+          '/api': 'http://localhost:3001',
+          '/uploads': 'http://localhost:3001',
+        }
       },
       plugins: [react()],
       define: {

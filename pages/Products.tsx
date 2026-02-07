@@ -1,36 +1,44 @@
 
-import React, { useState, useMemo } from 'react';
-import { PRODUCTS } from '../constants';
-import { Category } from '../types';
+import React, { useState, useMemo, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 
-const CATEGORIES: Category[] = ['All', 'Serum', 'Moisturizer', 'Deodorant', 'Cleanser', 'Toner'];
+const CATEGORIES = ['All', 'Serum', 'Moisturizer', 'Deodorant', 'Cleanser', 'Toner'];
 
 const Products: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<Category>('All');
+  const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState<any[]>([]);
+  const [sections, setSections] = useState<any>({});
+  const [settings, setSettings] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('/api/products').then(r => r.json()).then(setProducts);
+    fetch('/api/pages/products').then(r => r.json()).then(d => setSections(d.sections || {}));
+    fetch('/api/settings').then(r => r.json()).then(setSettings);
+  }, []);
+
+  const storeLinks = settings?.store_links || { shopee: '#', tokopedia: '#', whatsapp: '#' };
+  const header = sections.header || {};
 
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter(product => {
+    return products.filter(product => {
       const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, products]);
 
   return (
     <div className="py-24 animate-in fade-in duration-1000">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        {/* Header */}
         <div className="text-center mb-24">
-          <span className="text-[10px] font-black tracking-[0.5em] text-brand-blue/30 uppercase mb-8 block">Boutique</span>
-          <h1 className="text-7xl md:text-9xl font-black uppercase text-brand-blue tracking-tighter leading-[0.8] mb-10">The Collection</h1>
+          <span className="text-[10px] font-black tracking-[0.5em] text-brand-blue/30 uppercase mb-8 block">{header.badge || 'Boutique'}</span>
+          <h1 className="text-7xl md:text-9xl font-black uppercase text-brand-blue tracking-tighter leading-[0.8] mb-10">{header.title || 'The Collection'}</h1>
           <p className="text-slate-400 max-w-2xl mx-auto text-xl font-bold leading-tight">
-            High-performance natural skincare crafted for the modern soul.
+            {header.subtitle || 'High-performance natural skincare crafted for the modern soul.'}
           </p>
         </div>
 
-        {/* Controls */}
         <div className="flex flex-col lg:flex-row justify-between items-center mb-20 gap-10">
           <div className="flex flex-wrap justify-center gap-3">
             {CATEGORIES.map(category => (
@@ -62,11 +70,10 @@ const Products: React.FC = () => {
           </div>
         </div>
 
-        {/* Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {filteredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} storeLinks={storeLinks} />
             ))}
           </div>
         ) : (

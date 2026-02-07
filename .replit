@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web"]
+modules = ["nodejs-20", "web", "postgresql-16"]
 [agent]
 expertMode = true
 
@@ -30,10 +30,20 @@ waitForPort = 5000
 outputType = "webview"
 
 [[ports]]
+localPort = 3001
+externalPort = 3001
+
+[[ports]]
 localPort = 5000
 externalPort = 80
 
 [deployment]
-deploymentTarget = "static"
+deploymentTarget = "autoscale"
 build = ["npm", "run", "build"]
 publicDir = "dist"
+run = ["bash", "-c", "node server/index.js & npx serve -s dist -l 5000"]
+
+[userenv]
+
+[userenv.shared]
+JWT_SECRET = "fd1e13f02b4c2730bd3c2092b2d12a0055b93f63982f7a1ca2a6dc728e791bbb"

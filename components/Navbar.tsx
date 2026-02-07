@@ -1,9 +1,12 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { STORE_LINKS } from '../constants';
 
-const Navbar: React.FC = () => {
+interface Props {
+  storeLinks: { shopee: string; tokopedia: string; lazada: string; tiktok: string; whatsapp: string };
+}
+
+const Navbar: React.FC<Props> = ({ storeLinks }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -18,13 +21,11 @@ const Navbar: React.FC = () => {
     <nav className="sticky top-0 z-50 bg-brand-yellow border-b-2 border-brand-blue">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         <div className="flex justify-between h-20 items-center">
-          {/* Logo */}
           <Link to="/" className="flex flex-col brand-logo-font text-brand-blue uppercase hover:opacity-80 transition-opacity">
             <span className="text-2xl lg:text-3xl">jenn</span>
             <span className="text-2xl lg:text-3xl">skin</span>
           </Link>
 
-          {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-12">
             {navLinks.map((link) => (
               <Link 
@@ -39,7 +40,7 @@ const Navbar: React.FC = () => {
             ))}
             
             <a 
-              href={STORE_LINKS.shopee} 
+              href={storeLinks.shopee} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="bg-brand-blue text-brand-yellow px-7 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-brand-blue transition-all neo-shadow"
@@ -48,7 +49,6 @@ const Navbar: React.FC = () => {
             </a>
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden">
             <button onClick={() => setIsOpen(!isOpen)} className="text-brand-blue focus:outline-none">
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +59,6 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Nav */}
       {isOpen && (
         <div className="md:hidden bg-brand-yellow border-t-2 border-brand-blue py-10 px-8 space-y-8 animate-in slide-in-from-top duration-300">
           {navLinks.map((link) => (
@@ -73,7 +72,7 @@ const Navbar: React.FC = () => {
             </Link>
           ))}
           <div className="pt-8 border-t border-brand-blue/10">
-            <a href={STORE_LINKS.shopee} className="block w-full text-center bg-brand-blue text-brand-yellow py-5 rounded-2xl font-black uppercase tracking-widest text-xs">GO TO STORE</a>
+            <a href={storeLinks.shopee} className="block w-full text-center bg-brand-blue text-brand-yellow py-5 rounded-2xl font-black uppercase tracking-widest text-xs">GO TO STORE</a>
           </div>
         </div>
       )}
